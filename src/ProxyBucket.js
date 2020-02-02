@@ -29,7 +29,7 @@ module.exports = class ProxyBucket {
     async fetchAll() {
         const rawList = {};
         for (let provider of this._providers) {
-            debug(`Fetching proxies from : ${provider.url}`);
+            debug(`Fetching proxies from : ${provider.constructor.url}`);
             const proxies = await provider.fetchList();
             debug(`Got ${proxies.length} proxies`);
             for (let proxy of proxies) {
