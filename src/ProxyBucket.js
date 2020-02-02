@@ -76,7 +76,7 @@ module.exports = class ProxyBucket {
         proxy = this.bucket.contents[proxy.addr];
         if (proxy) {
             proxy.rating++;
-            this.bucket.persist();
+            await this.bucket.persist();
         }
     }
 
@@ -84,7 +84,7 @@ module.exports = class ProxyBucket {
         proxy = this.bucket.contents[proxy.addr];
         if (proxy) {
             proxy.rating--;
-            this.bucket.persist();
+            await this.bucket.persist();
         }
     }
 };
