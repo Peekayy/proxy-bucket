@@ -11,7 +11,7 @@ module.exports = class HttpProxy {
     }
 
     get url() {
-        return `http://${this.addr}`;
+        return `http://${this.addr}:${this.port}`;
     }
 
     toString() {
