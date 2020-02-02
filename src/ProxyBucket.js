@@ -73,7 +73,7 @@ module.exports = class ProxyBucket {
     }
 
     async goodReview(proxy) {
-        proxy = this.bucket.contents[proxy.ip];
+        proxy = this.bucket.contents[proxy.addr];
         if (proxy) {
             proxy.rating++;
             this.bucket.persist();
@@ -81,7 +81,7 @@ module.exports = class ProxyBucket {
     }
 
     async badReview(proxy) {
-        proxy = this.bucket.contents[proxy.ip];
+        proxy = this.bucket.contents[proxy.addr];
         if (proxy) {
             proxy.rating--;
             this.bucket.persist();
