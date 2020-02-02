@@ -6,7 +6,7 @@ module.exports = class HttpProxy {
         this.rating = rating;
     }
 
-    get addr(){
+    get addr() {
         return `${this.ip}:${this.port}`;
     }
 
@@ -21,4 +21,4 @@ module.exports = class HttpProxy {
     static compare(proxyA, proxyB) {
         return Math.sign(proxyA.rating - proxyB.rating);
     }
-}
+};

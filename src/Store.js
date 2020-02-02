@@ -8,7 +8,7 @@ module.exports = class Store {
     }
 
     async load() {
-        let contents = await fs.readFile(this.path, { encoding: "utf8", flag: "w+" });
+        let contents = await fs.readFile(this.path, {encoding: "utf8", flag: "w+"});
         if (!contents) {
             contents = "{}";
         }
@@ -18,4 +18,4 @@ module.exports = class Store {
     async persist() {
         await fs.writeFile(this.path, JSON.stringify(this.contents));
     }
-}
+};

@@ -6,7 +6,7 @@
   "version": "0.0.1",
   "name": "proxy-bucket",
   "license": "MIT",
-  
+  "main": "src/ProxyBucket.js",
   "dependencies": {
     "debug": "^4.1.1",
     "node-persist": "^3.0.5",

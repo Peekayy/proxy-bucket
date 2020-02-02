@@ -1,5 +1,5 @@
 const HttpProxy = require("./HttpProxy");
-const debug = require("debug")("ProxyBucket");
+const debug = require("debug")("pb.ProxyBucket");
 const Store = require("./Store");
 
 
@@ -38,11 +38,11 @@ module.exports = class ProxyBucket {
         }
 
         debug("Adding new proxies");
-        await this.bucket.load()
+        await this.bucket.load();
         const proxies = this.bucket.contents;
         const newProxies = Object.values(rawList);
 
-        while(newProxies.length){
+        while (newProxies.length) {
             let proxy = newProxies.pop();
             if (!proxies[proxy.addr]) {
                 proxies[proxy.addr] = proxy;
@@ -74,17 +74,17 @@ module.exports = class ProxyBucket {
 
     async goodReview(proxy) {
         proxy = this.bucket.contents[proxy.ip];
-        if(proxy){
+        if (proxy) {
             proxy.rating++;
             this.bucket.persist();
         }
     }
 
-    async badReview(proxy){
+    async badReview(proxy) {
         proxy = this.bucket.contents[proxy.ip];
-        if(proxy){
+        if (proxy) {
             proxy.rating--;
             this.bucket.persist();
         }
     }
-}
+};
