@@ -15,6 +15,7 @@ module.exports = class ProxyListDotDownload {
         }
         debug(rawList);
         return rawList.split("\r\n")
+            .filter(p => p)
             .map(p => p.split(":"))
             .map(p => new HttpProxy(p[0], p[1]));
     }
