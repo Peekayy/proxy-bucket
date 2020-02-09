@@ -8,7 +8,7 @@ module.exports = class Store {
     }
 
     async load() {
-        let contents = await fs.readFile(this.path, {encoding: "utf8", flag: "w+"});
+        let contents = await fs.readFile(this.path, {encoding: "utf8", flag: "a+"});
         if (!contents) {
             contents = "{}";
         }

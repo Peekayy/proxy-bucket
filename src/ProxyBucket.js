@@ -27,33 +27,35 @@ module.exports = class ProxyBucket {
     }
 
     async fetchAll() {
-        const rawList = {};
+        let newProxies;
         for (let provider of this._providers) {
             debug(`Fetching proxies from : ${provider.constructor.url}`);
-            const proxies = await provider.fetchList();
-            debug(`Got ${proxies.length} proxies`);
-            for (let proxy of proxies) {
-                rawList[proxy.addr] = proxy;
-            }
+            newProxies = await provider.fetchList();
+            debug(`Got ${newProxies.length} proxies`);
         }
 
         debug("Adding new proxies");
         await this.bucket.load();
         const proxies = this.bucket.contents;
-        const newProxies = Object.values(rawList);
 
         while (newProxies.length) {
             let proxy = newProxies.pop();
             if (!proxies[proxy.addr]) {
+                debug(`${proxy} added.`);
                 proxies[proxy.addr] = proxy;
             }
         }
-
         this.bucket.persist();
-
-        debug("Sorting proxies");
-
-        this._list = Object.values(proxies).sort(HttpProxy.compare).slice(0, 10);
+        this._list = Object.values(proxies)
+            .sort(HttpProxy.compare)
+            .slice(0, 10)
+            .map(proxy => {
+                if (proxy instanceof HttpProxy) {
+                    return proxy;
+                } else {
+                    return new HttpProxy(proxy.ip, proxy.port, proxy.rating);
+                }
+            });
         debug(this._list);
     }
 

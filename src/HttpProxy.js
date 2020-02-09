@@ -11,7 +11,7 @@ module.exports = class HttpProxy {
     }
 
     get url() {
-        return `http://${this.addr}:${this.port}`;
+        return `http://${this.addr}`;
     }
 
     toString() {
@@ -19,6 +19,6 @@ module.exports = class HttpProxy {
     }
 
     static compare(proxyA, proxyB) {
-        return Math.sign(proxyA.rating - proxyB.rating);
+        return Math.sign(proxyB.rating - proxyA.rating);
     }
 };
