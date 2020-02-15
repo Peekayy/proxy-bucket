@@ -3,7 +3,7 @@
     "name": "Peekayy",
     "email": "peekayy.dev@gmail.com"
   },
-  "version": "0.0.1",
+  "version": "1.0.0",
   "name": "proxy-bucket",
   "license": "MIT",
   "main": "src/ProxyBucket.js",
