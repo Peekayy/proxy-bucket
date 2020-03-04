@@ -1,15 +1,15 @@
 const request = require("request-promise-native");
-const debug = require("debug")("pb.providers.ProxyListDotDownload");
+const debug = require("debug")("pb.providers.ProxyScrapeDotCom");
 const HttpProxy = require("../HttpProxy");
 
-module.exports = class ProxyListDotDownload {
+module.exports = class ProxyScrapeDotCom {
 
-    static url = "https://www.proxy-list.download/api/v1/get?type=http";
+    static url = "https://api.proxyscrape.com/?request=getproxies&proxytype=http&timeout=10000&country=all&ssl=no&anonymity=all";
 
     async fetchList() {
         let rawList;
         try {
-            rawList = await request(ProxyListDotDownload.url);
+            rawList = await request(ProxyScrapeDotCom.url);
             debug(rawList);
             return rawList.split("\r\n")
                 .filter(p => p)
@@ -19,5 +19,6 @@ module.exports = class ProxyListDotDownload {
             debug(`Failed to get proxies list : ${err.message}`);
             return [];
         }
+
     }
 };

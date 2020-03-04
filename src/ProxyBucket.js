@@ -6,7 +6,8 @@ const Store = require("./Store");
 module.exports = class ProxyBucket {
 
     static providers = [
-        "ProxyListDotDownload"
+        "ProxyListDotDownload",
+        "ProxyScrapeDotCom"
     ];
 
     constructor(providers = ProxyBucket.providers) {
