@@ -4,7 +4,7 @@ const HttpProxy = require("../HttpProxy");
 
 module.exports = class ProxyScrapeDotCom {
 
-    static url = "https://api.proxyscrape.com/?request=getproxies&proxytype=http&timeout=10000&country=all&ssl=no&anonymity=all";
+    static url = "https://api.proxyscrape.com/?request=getproxies&proxytype=http&timeout=10000&country=all&ssl=no&anonymity=elite&format=normal";
 
     async fetchList() {
         let rawList;
