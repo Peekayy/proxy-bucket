@@ -1,23 +1,29 @@
-const HttpProxy = require("./HttpProxy");
-const debug = require("debug")("pb.ProxyBucket");
-const Store = require("./Store");
+import HttpProxy from "./HttpProxy";
+import * as DebugFactory from "debug";
+import Store from "./Store";
+import AbstractProvider from "./providers/AbstractProvider";
+
+const debug = DebugFactory("pb.ProxyBucket");
 
 
-module.exports = class ProxyBucket {
+export default class ProxyBucket {
 
     static providers = [
         "ProxyListDotDownload",
         "ProxyScrapeDotCom"
     ];
+    private readonly providers: AbstractProvider[];
+    private bucket: Store;
+    private _list: HttpProxy[];
 
     constructor(providers = ProxyBucket.providers) {
         this._list = [];
         if (!Array.isArray(providers)) {
             providers = [providers];
         }
-        this._providers = providers.map(p => {
+        this.providers = providers.map(p => {
             try {
-                const P = require(`./providers/${p}`);
+                const P = require(`./providers/${p}`).default;
                 return new P();
             } catch (err) {
                 debug(`Failed to load provider ${p}`, err);
@@ -29,8 +35,8 @@ module.exports = class ProxyBucket {
 
     async fetchAll() {
         let newProxies;
-        for (let provider of this._providers) {
-            debug(`Fetching proxies from : ${provider.constructor.url}`);
+        for (let provider of this.providers) {
+            debug(`Fetching proxies from : ${provider.constructor['name']}`);
             newProxies = await provider.fetchList();
             debug(`Got ${newProxies.length} proxies`);
         }
@@ -49,14 +55,7 @@ module.exports = class ProxyBucket {
         this.bucket.persist();
         this._list = Object.values(proxies)
             .sort(HttpProxy.compare)
-            .slice(0, 10)
-            .map(proxy => {
-                if (proxy instanceof HttpProxy) {
-                    return proxy;
-                } else {
-                    return new HttpProxy(proxy.ip, proxy.port, proxy.rating);
-                }
-            });
+            .slice(0, 10);
         debug(this._list);
     }
 

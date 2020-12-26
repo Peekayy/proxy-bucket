@@ -1,5 +1,7 @@
-const ProxyBucket = require("./src/ProxyBucket");
-const debug = require("debug")("test.js");
+import ProxyBucket from "./src/ProxyBucket";
+import * as DebugFactory from "debug";
+
+const debug = DebugFactory("test.js");
 
 (async () => {
     const bucket = new ProxyBucket();

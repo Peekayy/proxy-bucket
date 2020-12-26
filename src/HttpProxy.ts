@@ -1,9 +1,15 @@
-module.exports = class HttpProxy {
+export default class HttpProxy {
+    private ip: string;
+    private port: number;
+    private rating: number;
+    public provider: string;
 
-    constructor(ip, port, rating = 0) {
+
+    constructor(ip: string, port: number, provider: string, rating: number = 0) {
         this.ip = ip;
         this.port = port;
         this.rating = rating;
+        this.provider = provider;
     }
 
     get addr() {
@@ -21,4 +27,4 @@ module.exports = class HttpProxy {
     static compare(proxyA, proxyB) {
         return Math.sign(proxyB.rating - proxyA.rating);
     }
-};
+}
