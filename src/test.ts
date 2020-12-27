@@ -1,4 +1,4 @@
-import ProxyBucket from "./src/ProxyBucket";
+import ProxyBucket from "./ProxyBucket";
 import * as DebugFactory from "debug";
 
 const debug = DebugFactory("test.js");
