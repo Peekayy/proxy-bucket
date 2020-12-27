@@ -1,7 +1,7 @@
 export default class HttpProxy {
-    private ip: string;
-    private port: number;
-    private rating: number;
+    public ip: string;
+    public port: number;
+    public rating: number;
     public provider: string;
 
 
