@@ -1,7 +1,7 @@
-import * as request from "request-promise-native";
 import HttpProxy from "../HttpProxy";
 import * as DebugFactory from "debug";
 import AbstractProvider from "./AbstractProvider";
+import axios from "axios";
 
 const debug = DebugFactory("pb.providers.ProxyListDotDownload");
 
@@ -12,7 +12,10 @@ export default class ProxyListDotDownload extends AbstractProvider {
     async fetchList(): Promise<Array<HttpProxy>> {
         let rawList;
         try {
-            rawList = await request(ProxyListDotDownload.url);
+            const response = await axios.get(ProxyListDotDownload.url, {
+                responseType: "text"
+            });
+            rawList = response.data;
             debug(rawList);
             return rawList.split("\r\n")
                 .filter(p => p)

@@ -4,9 +4,13 @@
     "module": "CommonJS",
     "target": "ESNext",
     "sourceMap": true,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "newLine": "LF"
   },
   "include": [
     "src/**/*.ts"
-  ]
+  ],
+  "ts-node": {
+    "files": true
+  }
 }

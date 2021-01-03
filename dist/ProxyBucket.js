@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const HttpProxy_1 = require("./HttpProxy");
 const DebugFactory = require("debug");
 const Store_1 = require("./Store");
+const shuffle = require("lodash.shuffle");
 const debug = DebugFactory("pb.ProxyBucket");
 class ProxyBucket {
     constructor(providers = ProxyBucket.providers) {
@@ -23,10 +24,10 @@ class ProxyBucket {
         this.bucket = new Store_1.default("./bucket.json");
     }
     async fetchAll() {
-        let newProxies;
+        let newProxies = [];
         for (let provider of this.providers) {
             debug(`Fetching proxies from : ${provider.constructor['name']}`);
-            newProxies = await provider.fetchList();
+            newProxies.push(...await provider.fetchList());
             debug(`Got ${newProxies.length} proxies`);
         }
         debug("Adding new proxies");
@@ -35,14 +36,15 @@ class ProxyBucket {
         while (newProxies.length) {
             let proxy = newProxies.pop();
             if (!proxies[proxy.addr]) {
-                debug(`${proxy} added.`);
+                debug(`${proxy}[${proxy.provider}] added.`);
                 proxies[proxy.addr] = proxy;
             }
         }
         this.bucket.persist();
-        this._list = Object.values(proxies)
+        this._list = shuffle(Object.values(proxies))
             .sort(HttpProxy_1.default.compare)
-            .slice(0, 10);
+            .slice(0, 10)
+            .map(p => new HttpProxy_1.default(p.ip, p.port, p.provider, p.rating, p.timeout));
         debug(this._list);
     }
     async getOne() {
@@ -59,17 +61,17 @@ class ProxyBucket {
             throw new Error("No proxy found...");
         }
     }
-    async goodReview(proxy) {
+    async goodReview(proxy, mark = 1) {
         proxy = this.bucket.contents[proxy.addr];
         if (proxy) {
-            proxy.rating++;
+            proxy.rating += mark;
             await this.bucket.persist();
         }
     }
-    async badReview(proxy) {
+    async badReview(proxy, mark = 1) {
         proxy = this.bucket.contents[proxy.addr];
         if (proxy) {
-            proxy.rating--;
+            proxy.rating -= mark;
             await this.bucket.persist();
         }
     }
@@ -79,5 +81,4 @@ ProxyBucket.providers = [
     "ProxyListDotDownload",
     "ProxyScrapeDotCom"
 ];
-;
 //# sourceMappingURL=ProxyBucket.js.map

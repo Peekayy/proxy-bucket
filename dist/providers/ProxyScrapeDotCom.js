@@ -1,15 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const request = require("request-promise-native");
 const HttpProxy_1 = require("../HttpProxy");
 const DebugFactory = require("debug");
 const AbstractProvider_1 = require("./AbstractProvider");
+const axios_1 = require("axios");
 const debug = DebugFactory("pb.providers.ProxyScrapeDotCom");
 class ProxyScrapeDotCom extends AbstractProvider_1.default {
     async fetchList() {
         let rawList;
         try {
-            rawList = await request(ProxyScrapeDotCom.url);
+            const response = await axios_1.default.get(ProxyScrapeDotCom.url, {
+                responseType: "text"
+            });
+            rawList = response.data;
             debug(rawList);
             return rawList.split("\r\n")
                 .filter(p => p)

@@ -2,6 +2,7 @@ import HttpProxy from "./HttpProxy";
 import * as DebugFactory from "debug";
 import Store from "./Store";
 import AbstractProvider from "./providers/AbstractProvider";
+import * as shuffle from "lodash.shuffle";
 
 const debug = DebugFactory("pb.ProxyBucket");
 
@@ -34,10 +35,10 @@ export default class ProxyBucket {
     }
 
     async fetchAll() {
-        let newProxies;
+        let newProxies: HttpProxy[] = [];
         for (let provider of this.providers) {
             debug(`Fetching proxies from : ${provider.constructor['name']}`);
-            newProxies = await provider.fetchList();
+            newProxies.push(...await provider.fetchList());
             debug(`Got ${newProxies.length} proxies`);
         }
 
@@ -48,14 +49,15 @@ export default class ProxyBucket {
         while (newProxies.length) {
             let proxy = newProxies.pop();
             if (!proxies[proxy.addr]) {
-                debug(`${proxy} added.`);
+                debug(`${proxy}[${proxy.provider}] added.`);
                 proxies[proxy.addr] = proxy;
             }
         }
         this.bucket.persist();
-        this._list = Object.values(proxies)
+        this._list = shuffle(Object.values(proxies))
             .sort(HttpProxy.compare)
-            .slice(0, 10);
+            .slice(0, 10)
+            .map(p => new HttpProxy(p.ip, p.port, p.provider, p.rating, p.timeout));
         debug(this._list);
     }
 
@@ -74,19 +76,19 @@ export default class ProxyBucket {
         }
     }
 
-    async goodReview(proxy) {
+    async goodReview(proxy: HttpProxy, mark = 1) {
         proxy = this.bucket.contents[proxy.addr];
         if (proxy) {
-            proxy.rating++;
+            proxy.rating += mark;
             await this.bucket.persist();
         }
     }
 
-    async badReview(proxy) {
+    async badReview(proxy: HttpProxy, mark = 1) {
         proxy = this.bucket.contents[proxy.addr];
         if (proxy) {
-            proxy.rating--;
+            proxy.rating -= mark;
             await this.bucket.persist();
         }
     }
-};
+}
