@@ -16,3 +16,5 @@ interface IFrontendOptions {
     minReqDelay?: number,
     proxyTimeoutOverride?: number
 }
+
+type ProxyProtocol = "http" | "https" | "socks4" | "socks5";

@@ -44,7 +44,7 @@ class ProxyBucket {
         this._list = shuffle(Object.values(proxies))
             .sort(HttpProxy_1.default.compare)
             .slice(0, 10)
-            .map(p => new HttpProxy_1.default(p.ip, p.port, p.provider, p.rating, p.timeout));
+            .map(p => new HttpProxy_1.default(p.ip, p.port, p.provider, p.rating, p.timeout, p.protocol));
         debug(this._list);
     }
     async getOne() {
@@ -79,6 +79,6 @@ class ProxyBucket {
 exports.default = ProxyBucket;
 ProxyBucket.providers = [
     "ProxyListDotDownload",
-    "ProxyScrapeDotCom"
+    "PubProxyDotCom"
 ];
 //# sourceMappingURL=ProxyBucket.js.map

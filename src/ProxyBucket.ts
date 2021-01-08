@@ -11,7 +11,7 @@ export default class ProxyBucket {
 
     static providers = [
         "ProxyListDotDownload",
-        "ProxyScrapeDotCom"
+        "PubProxyDotCom"
     ];
     private readonly providers: AbstractProvider[];
     private bucket: Store;
@@ -57,7 +57,7 @@ export default class ProxyBucket {
         this._list = shuffle(Object.values(proxies))
             .sort(HttpProxy.compare)
             .slice(0, 10)
-            .map(p => new HttpProxy(p.ip, p.port, p.provider, p.rating, p.timeout));
+            .map(p => new HttpProxy(p.ip, p.port, p.provider, p.rating, p.timeout, p.protocol));
         debug(this._list);
     }
 

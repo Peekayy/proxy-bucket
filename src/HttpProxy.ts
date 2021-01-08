@@ -1,17 +1,21 @@
+import {ProxyProtocol} from "./types";
+
 export default class HttpProxy {
     public ip: string;
     public port: number;
     public rating: number;
     public provider: string;
     public timeout: number;
+    public protocol: ProxyProtocol;
 
 
-    constructor(ip: string, port: number, provider: string, rating: number = 0, timeout: number = 5000) {
+    constructor(ip: string, port: number, provider: string, rating: number = 0, timeout: number = 5000, protocol: ProxyProtocol = "http") {
         this.ip = ip;
         this.port = port;
         this.rating = rating;
         this.provider = provider;
         this.timeout = timeout;
+        this.protocol = protocol;
     }
 
     get addr() {

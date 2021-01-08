@@ -7,9 +7,16 @@ const axios_1 = require("axios");
 const debug = DebugFactory("pb.providers.ProxyListDotDownload");
 class ProxyListDotDownload extends AbstractProvider_1.default {
     async fetchList() {
+        const list = [];
+        list.push(...await this.getFromUrl("http"));
+        list.push(...await this.getFromUrl("https"));
+        return list;
+    }
+    async getFromUrl(protocol) {
         let rawList;
         try {
-            const response = await axios_1.default.get(ProxyListDotDownload.url, {
+            debug(`Get from ${ProxyListDotDownload.url(protocol)}`);
+            let response = await axios_1.default.get(ProxyListDotDownload.url(protocol), {
                 responseType: "text"
             });
             rawList = response.data;
@@ -17,7 +24,7 @@ class ProxyListDotDownload extends AbstractProvider_1.default {
             return rawList.split("\r\n")
                 .filter(p => p)
                 .map(p => p.split(":"))
-                .map(p => new HttpProxy_1.default(p[0], p[1], ProxyListDotDownload.name));
+                .map(p => new HttpProxy_1.default(p[0], p[1], ProxyListDotDownload.name, 0, undefined, protocol));
         }
         catch (err) {
             debug(`Failed to get proxies list : ${err.message}`);
@@ -26,6 +33,6 @@ class ProxyListDotDownload extends AbstractProvider_1.default {
     }
 }
 exports.default = ProxyListDotDownload;
-ProxyListDotDownload.url = "https://www.proxy-list.download/api/v1/get?type=http";
+ProxyListDotDownload.url = (protocol) => `https://www.proxy-list.download/api/v1/get?type=${protocol}`;
 ;
 //# sourceMappingURL=ProxyListDotDownload.js.map

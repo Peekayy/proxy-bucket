@@ -1,12 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class HttpProxy {
-    constructor(ip, port, provider, rating = 0, timeout = 5000) {
+    constructor(ip, port, provider, rating = 0, timeout = 5000, protocol = "http") {
         this.ip = ip;
         this.port = port;
         this.rating = rating;
         this.provider = provider;
         this.timeout = timeout;
+        this.protocol = protocol;
     }
     get addr() {
         return `${this.ip}:${this.port}`;
