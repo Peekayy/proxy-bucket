@@ -2,3 +2,4 @@ node_modules
 bucket.json
 ratings.json
 .idea
+dist
