@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import HttpProxy from "./HttpProxy";
+import {HttpProxy} from "./HttpProxy";
 
 export default class Store {
     private readonly path: string;

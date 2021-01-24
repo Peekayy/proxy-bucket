@@ -1,13 +1,13 @@
 import axios, {AxiosRequestConfig, AxiosResponse} from "axios";
-import ProxyBucket from "./ProxyBucket";
-import HttpProxy from "./HttpProxy";
+import {ProxyBucket} from "./ProxyBucket";
+import {HttpProxy} from "./HttpProxy";
 import * as DebugFactory from "debug";
 import {IFrontendOptions} from "./types";
 import {sleep} from "./tools";
 
 const debug = DebugFactory("pb.ProxyFrontend");
 
-export default class ProxyFrontend {
+export class ProxyFrontend {
 
     private currentProxy: HttpProxy;
     private lastReqMs: number = 0;

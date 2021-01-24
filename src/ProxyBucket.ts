@@ -1,4 +1,4 @@
-import HttpProxy from "./HttpProxy";
+import {HttpProxy} from "./HttpProxy";
 import * as DebugFactory from "debug";
 import Store from "./Store";
 import AbstractProvider from "./providers/AbstractProvider";
@@ -7,7 +7,7 @@ import * as shuffle from "lodash.shuffle";
 const debug = DebugFactory("pb.ProxyBucket");
 
 
-export default class ProxyBucket {
+export class ProxyBucket {
 
     static providers = [
         "ProxyListDotDownload",

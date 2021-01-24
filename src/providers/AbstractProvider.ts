@@ -1,4 +1,4 @@
-import HttpProxy from "../HttpProxy";
+import {HttpProxy} from "../HttpProxy";
 
 export default abstract class AbstractProvider {
 

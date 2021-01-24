@@ -1,4 +1,4 @@
-import HttpProxy from "../HttpProxy";
+import {HttpProxy} from "../HttpProxy";
 import * as DebugFactory from "debug";
 import AbstractProvider from "./AbstractProvider";
 import axios from "axios";

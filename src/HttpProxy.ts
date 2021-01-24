@@ -1,6 +1,6 @@
 import {ProxyProtocol} from "./types";
 
-export default class HttpProxy {
+export class HttpProxy {
     public ip: string;
     public port: number;
     public rating: number;
