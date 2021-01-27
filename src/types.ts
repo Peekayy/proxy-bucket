@@ -1,6 +1,6 @@
 import {AxiosResponse} from "axios";
 
-interface IFrontendOptions {
+export interface IFrontendOptions {
     timeout?: number,
     perProxyAttempts?: number,
     /**
@@ -17,4 +17,4 @@ interface IFrontendOptions {
     proxyTimeoutOverride?: number
 }
 
-type ProxyProtocol = "http" | "https" | "socks4" | "socks5";
+export type ProxyProtocol = "http" | "https" | "socks4" | "socks5";

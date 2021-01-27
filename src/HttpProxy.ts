@@ -7,6 +7,7 @@ export class HttpProxy {
     public provider: string;
     public timeout: number;
     public protocol: ProxyProtocol;
+    public lock?: number;
 
 
     constructor(ip: string, port: number, provider: string, rating: number = 0, timeout: number = 5000, protocol: ProxyProtocol = "http") {

@@ -3,11 +3,14 @@
     "name": "Peekayy",
     "email": "peekayy.dev@gmail.com"
   },
-  "version": "1.4.0",
+  "version": "1.5.0",
   "name": "proxy-bucket",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "scripts": {
+    "prepublish": "tsc"
+  },
   "dependencies": {
     "axios": "^0.21.1",
     "cheerio": "^1.0.0-rc.5",

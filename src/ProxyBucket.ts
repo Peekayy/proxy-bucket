@@ -16,8 +16,9 @@ export class ProxyBucket {
     private readonly providers: AbstractProvider[];
     private bucket: Store;
     private _list: HttpProxy[];
+    private ongoingFetchPromise: Promise<void>;
 
-    constructor(providers = ProxyBucket.providers) {
+    constructor(providers = ProxyBucket.providers, private lockDurationSeconds = 3600) {
         this._list = [];
         if (!Array.isArray(providers)) {
             providers = [providers];
@@ -34,7 +35,7 @@ export class ProxyBucket {
         this.bucket = new Store("./bucket.json");
     }
 
-    async fetchAll() {
+    private async internalFetchAll() {
         let newProxies: HttpProxy[] = [];
         for (let provider of this.providers) {
             debug(`Fetching proxies from : ${provider.constructor['name']}`);
@@ -53,12 +54,24 @@ export class ProxyBucket {
                 proxies[proxy.addr] = proxy;
             }
         }
-        this.bucket.persist();
+        await this.bucket.persist();
+        const now = Date.now();
         this._list = shuffle(Object.values(proxies))
+            .filter(p => !p.lock || p.lock < now)
             .sort(HttpProxy.compare)
             .slice(0, 10)
             .map(p => new HttpProxy(p.ip, p.port, p.provider, p.rating, p.timeout, p.protocol));
         debug(this._list);
+    }
+
+    async fetchAll() {
+        if (this.ongoingFetchPromise) {
+            await this.ongoingFetchPromise;
+        } else {
+            this.ongoingFetchPromise = this.internalFetchAll();
+            await this.ongoingFetchPromise;
+            this.ongoingFetchPromise = null;
+        }
     }
 
     async getOne() {
@@ -70,9 +83,26 @@ export class ProxyBucket {
         const proxy = this._list.pop();
         debug("Delivering proxy", proxy);
         if (proxy) {
+            await this.lock(proxy);
             return proxy;
         } else {
             throw new Error("No proxy found...");
+        }
+    }
+
+    async lock(proxy: HttpProxy) {
+        proxy = this.bucket.contents[proxy.addr];
+        if (proxy) {
+            proxy.lock = Date.now() + this.lockDurationSeconds * 1000;
+            await this.bucket.persist();
+        }
+    }
+
+    async unlock(proxy: HttpProxy) {
+        proxy = this.bucket.contents[proxy.addr];
+        if (proxy) {
+            delete proxy.lock;
+            await this.bucket.persist();
         }
     }
 
