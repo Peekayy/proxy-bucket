@@ -3,6 +3,7 @@ import * as DebugFactory from "debug";
 import Store from "./Store";
 import AbstractProvider from "./providers/AbstractProvider";
 import * as shuffle from "lodash.shuffle";
+import * as AsyncLock from "async-lock";
 
 const debug = DebugFactory("pb.ProxyBucket");
 
@@ -17,6 +18,7 @@ export class ProxyBucket {
     private bucket: Store;
     private _list: HttpProxy[];
     private ongoingFetchPromise: Promise<void>;
+    private readonly semaphore = new AsyncLock();
 
     constructor(providers = ProxyBucket.providers, private lockDurationSeconds = 3600) {
         this._list = [];
@@ -75,12 +77,13 @@ export class ProxyBucket {
     }
 
     async getOne() {
-        if (!this._list.length) {
-            debug("Empty proxy list, fetching a new one.");
-            await this.fetchAll();
-        }
-
-        const proxy = this._list.pop();
+        const proxy = await this.semaphore.acquire("listLock", async () => {
+            if (!this._list.length) {
+                debug("Empty proxy list, fetching a new one.");
+                await this.fetchAll();
+            }
+            return this._list.pop();
+        });
         debug("Delivering proxy", proxy);
         if (proxy) {
             await this.lock(proxy);
