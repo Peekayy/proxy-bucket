@@ -14,7 +14,7 @@
   "dependencies": {
     "async-lock": "^1.2.8",
     "axios": "^0.21.2",
-    "cheerio": "^1.0.0-rc.5",
+    "cheerio": "^1.0.0-rc.12",
     "debug": "^4.1.1",
     "lodash.shuffle": "^4.2.0",
     "verror": "^1.10.0"
